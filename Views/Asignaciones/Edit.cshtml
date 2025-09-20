@@ -1,0 +1,40 @@
+﻿@model PracticoII_Web.Data.Models.Asignacione
+
+@{
+    ViewData["Title"] = "Editar Asignación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-dark">Editar Asignación</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="IdAsignacion" />
+
+                <div class="mb-3">
+                    <label asp-for="IdUsuarioAsignado" class="form-label fw-bold"></label>
+                    <select asp-for="IdUsuarioAsignado" class="form-control" asp-items="ViewBag.IdUsuarioAsignado"></select>
+                    <span asp-validation-for="IdUsuarioAsignado" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="FechaAsignacion" class="form-label fw-bold"></label>
+                    <input asp-for="FechaAsignacion" class="form-control" />
+                    <span asp-validation-for="FechaAsignacion" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,31 @@
+﻿@model PracticoII_Web.Data.Models.Comentario
+
+@{
+    ViewData["Title"] = "Borrar Comentario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-danger">Confirmar eliminación</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Texto</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Texto)</dd>
+
+                <dt class="col-sm-3 fw-bold">Fecha</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Fecha)</dd>
+
+                <dt class="col-sm-3 fw-bold">Usuario</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.IdUsuarioNavigation.IdUsuario)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="IdComentario" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Borrar</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

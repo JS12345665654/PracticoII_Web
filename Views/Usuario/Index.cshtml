@@ -1,0 +1,180 @@
+﻿@model IEnumerable<PracticoII_Web.Data.Models.Usuario>
+@using System.Security.Claims
+@{
+    var Roles = User.FindFirst(ClaimTypes.Role)?.Value;
+    ViewData["Title"] = "Usuarios";
+}
+
+<!-- Estilos DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Lista de Usuarios</h1>
+        <a class="btn btn-primary" asp-action="Create">+ Nuevo Usuario</a>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        <input id="searchInput" type="text" class="form-control w-25" placeholder="Buscar usuarios...">
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <form asp-controller="Usuario" asp-action="ExportarExcel" method="post" class="me-2">
+            <input type="hidden" name="searchTerm" id="searchTermExcel" />
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-file-earmark-excel-fill me-1"></i> Exportar a Excel
+            </button>
+        </form>
+
+        <form asp-controller="Usuario" asp-action="ExportarPDF" method="post">
+            <input type="hidden" name="searchTerm" id="searchTermPDF" />
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+            </button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table id="usuariosTable" class="table table-dark table-hover table-bordered rounded shadow">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.Email)</th>
+                    <th>@Html.DisplayNameFor(model => model.Rol)</th>
+                    <th>@Html.DisplayNameFor(model => model.Contraseña)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Rol)</td>
+                        <td>****</td>
+                        <td>
+                            @if (Roles == "Administrador")
+                            {
+                                <a class="btn btn-sm btn-warning me-1" asp-action="Edit" asp-route-id="@item.IdUsuario">
+                                    <i class="bi bi-pencil-square"></i>Editar
+                                </a>
+                            }
+
+                            <a class="btn btn-sm btn-info me-1" asp-action="Details" asp-route-id="@item.IdUsuario">
+                                <i class="bi bi-eye-fill"></i>Detalle
+                            </a>
+
+                            @if (Roles == "Administrador")
+                            {
+                                <button type="button"
+                                        class="btn btn-sm btn-danger btn-eliminar"
+                                        data-url="@Url.Action("Delete", "Usuario", new { id = item.IdUsuario })"
+                                        data-nombre="@item.Nombre">
+                                    <i class="bi bi-trash-fill"></i> Borrar
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Confirmación de Eliminación -->
+<div class="modal fade" id="confirmEliminarModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar <strong id="modalNombre"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="formEliminar" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnConfirmarEliminar" type="button" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @TempData["Mensaje"]
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <!-- DataTables CDN -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#usuariosTable').DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                },
+                ordering: true,
+                paging: true,
+                searching: false // Desactiva el buscador interno de DataTables
+            });
+        });
+
+        // Filtro en vivo personalizado
+        document.getElementById("searchInput").addEventListener("input", function () {
+            var value = this.value.toLowerCase();
+            document.getElementById("searchTermExcel").value = value;
+            document.getElementById("searchTermPDF").value = value;
+
+            const rows = document.querySelectorAll('#usuariosTable tbody tr');
+            rows.forEach(row => {
+                const nombre = row.cells[0].textContent.toLowerCase();
+                const email = row.cells[1].textContent.toLowerCase();
+                const rol = row.cells[2].textContent.toLowerCase();
+
+                row.style.display = (nombre.includes(value) || email.includes(value) || rol.includes(value)) ? '' : 'none';
+            });
+        });
+
+        // Confirmar eliminación con modal
+        document.addEventListener('DOMContentLoaded', function () {
+            let urlEliminar = null;
+            const modalEliminar = new bootstrap.Modal(document.getElementById('confirmEliminarModal'));
+            const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
+            const modalNombre = document.getElementById('modalNombre');
+            const formEliminar = document.getElementById('formEliminar');
+
+            document.querySelectorAll('.btn-eliminar').forEach(button => {
+                button.addEventListener('click', function () {
+                    urlEliminar = this.getAttribute('data-url');
+                    const nombre = this.getAttribute('data-nombre') || "este usuario";
+                    modalNombre.textContent = nombre;
+                    modalEliminar.show();
+                });
+            });
+
+            btnConfirmarEliminar.addEventListener('click', function () {
+                if (!urlEliminar) return;
+                formEliminar.action = urlEliminar;
+                formEliminar.submit();
+            });
+        });
+    </script>
+}

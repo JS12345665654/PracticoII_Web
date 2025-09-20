@@ -1,0 +1,48 @@
+﻿@model PracticoII_Web.Data.Models.Proyecto
+
+@{
+    ViewData["Title"] = "Eliminar Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-danger fw-bold mb-4">Eliminar Proyecto</h2>
+
+    <div class="alert alert-warning shadow-sm">
+        <strong>¿Estás seguro que deseas eliminar este proyecto?</strong> Esta acción no se puede deshacer.
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body bg-light">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Nombre</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3 fw-bold">Descripción</dt>
+                <dd class="col-sm-9">@Model.Descripcion</dd>
+
+                <dt class="col-sm-3 fw-bold">Fecha de Inicio</dt>
+                <dd class="col-sm-9">@Model.FechaInicio</dd>
+
+                <dt class="col-sm-3 fw-bold">Fecha de Fin</dt>
+                <dd class="col-sm-9">@Model.FechaFin</dd>
+
+                <dt class="col-sm-3 fw-bold">Asignación</dt>
+                <dd class="col-sm-9">@Model.IdAsignacion</dd>
+
+                <dt class="col-sm-3 fw-bold">Asignación Relacionada</dt>
+                <dd class="col-sm-9">@Model.IdProyectoNavigation?.IdAsignacion</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdProyecto" />
+        <div class="d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash-fill"></i> Confirmar Eliminación
+            </button>
+        </div>
+    </form>
+</div>

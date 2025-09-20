@@ -1,0 +1,138 @@
+﻿@model IEnumerable<PracticoII_Web.Data.Models.Proyecto>
+@using System.Security.Claims
+@{
+    var Roles = User.FindFirst(ClaimTypes.Role)?.Value;
+    ViewData["Title"] = "Proyectos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-dark fw-bold">Gestión de Proyectos</h1>
+        @if (Roles == "Administrador")
+        {
+            <a asp-action="Create" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-circle"></i> Nuevo Proyecto
+            </a>
+        }
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Listado de Proyectos</h4>
+        </div>
+        <div class="card-body bg-light">
+            <div class="table-responsive">
+                <table id="tablaProyectos" class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                            <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+                            <th>@Html.DisplayNameFor(model => model.FechaInicio)</th>
+                            <th>@Html.DisplayNameFor(model => model.FechaFin)</th>
+                            <th>@Html.DisplayNameFor(model => model.IdAsignacion)</th>
+                            <th>@Html.DisplayNameFor(model => model.IdProyectoNavigation)</th>
+                            <th>Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                                <td>@item.FechaInicio.ToString()</td>
+                                <td>@(item.FechaFin.HasValue? item.FechaFin.Value.ToString() : "")</td>
+                                <td>@Html.DisplayFor(modelItem => item.IdAsignacion)</td>
+                                <td>@Html.DisplayFor(modelItem => item.IdProyectoNavigation.IdAsignacion)</td>
+                                <td class="text-center">
+                                    @if (Roles == "Administrador")
+                                    {
+                                        <a class="btn btn-sm btn-warning me-1" asp-action="Edit" asp-route-id="@item.IdProyecto">
+                                            <i class="bi bi-pencil-fill"></i> Editar
+                                        </a>
+                                        <a class="btn btn-sm btn-info me-1" asp-action="Details" asp-route-id="@item.IdProyecto">
+                                            <i class="bi bi-eye-fill"></i> Detalles
+                                        </a>
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger btn-eliminar"
+                                                data-url="@Url.Action("Delete", "Proyecto", new { id = item.IdProyecto })"
+                                                data-nombre="@item.Nombre">
+                                            <i class="bi bi-trash-fill"></i> Borrar
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmEliminarModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro que deseas eliminar <strong id="modalNombre"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="formEliminar" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnConfirmarEliminar" type="button" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tablaProyectos').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros disponibles",
+                    "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                }
+            });
+
+            let urlEliminar = null;
+            const modalEliminar = new bootstrap.Modal(document.getElementById('confirmEliminarModal'));
+            const btnConfirmarEliminar = document.getElementById('btnConfirmarEliminar');
+            const modalNombre = document.getElementById('modalNombre');
+            const formEliminar = document.getElementById('formEliminar');
+
+            document.querySelectorAll('.btn-eliminar').forEach(button => {
+                button.addEventListener('click', function () {
+                    urlEliminar = this.getAttribute('data-url');
+                    const nombre = this.getAttribute('data-nombre') || "este proyecto";
+                    modalNombre.textContent = nombre;
+                    modalEliminar.show();
+                });
+            });
+
+            btnConfirmarEliminar.addEventListener('click', function () {
+                if (!urlEliminar) return;
+                formEliminar.action = urlEliminar;
+                formEliminar.submit();
+            });
+        });
+    </script>
+}

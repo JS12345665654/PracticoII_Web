@@ -1,0 +1,46 @@
+﻿@model PracticoII_Web.Data.Models.Incidente
+
+@{
+    ViewData["Title"] = "Editar Incidente";
+}
+
+<h1 class="mt-4">Editar Incidente</h1>
+
+<div class="card bg-dark text-white p-4 mt-3 shadow rounded">
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="IdIncidente" />
+
+        <div class="mb-3">
+            <label asp-for="Titulo" class="form-label"></label>
+            <input asp-for="Titulo" class="form-control" />
+            <span asp-validation-for="Titulo" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IdUsuarioReporta" class="form-label">Usuario que Reporta</label>
+            <select asp-for="IdUsuarioReporta" class="form-control" asp-items="ViewBag.IdUsuarioReporta"></select>
+            <span asp-validation-for="IdUsuarioReporta" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IdProyecto" class="form-label">Proyecto Relacionado</label>
+            <select asp-for="IdProyecto" class="form-control" asp-items="ViewBag.IdProyecto"></select>
+            <span asp-validation-for="IdProyecto" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

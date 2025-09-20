@@ -1,0 +1,55 @@
+﻿@model PracticoII_Web.Data.Models.Usuario
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-dark">Nuevo Usuario</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label fw-bold"></label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingresá el nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Contraseña" class="form-label fw-bold"></label>
+                    <input asp-for="Contraseña" class="form-control" type="password" placeholder="Ingresá la contraseña" />
+                    <span asp-validation-for="Contraseña" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label fw-bold"></label>
+                    <input asp-for="Email" class="form-control" placeholder="ejemplo@correo.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Rol" class="form-label fw-bold"></label>
+                    <select asp-for="Rol" class="form-select">
+                        <option value="">-- Seleccioná un rol --</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Usuario">Usuario</option>
+                    </select>
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Crear</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

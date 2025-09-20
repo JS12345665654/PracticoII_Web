@@ -1,0 +1,33 @@
+﻿@model PracticoII_Web.Data.Models.Incidente
+
+@{
+    ViewData["Title"] = "Eliminar Incidente";
+}
+
+<h1 class="mt-4 text-danger">Eliminar Incidente</h1>
+
+<div class="card bg-dark text-white p-4 mt-3 shadow rounded">
+    <h4>¿Estás seguro que deseas eliminar este incidente?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Título</dt>
+        <dd class="col-sm-9">@Model.Titulo</dd>
+
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+
+        <dt class="col-sm-3">Usuario que Reporta</dt>
+        <dd class="col-sm-9">@Model.IdUsuarioReportaNavigation?.Nombre</dd>
+
+        <dt class="col-sm-3">Proyecto Relacionado</dt>
+        <dd class="col-sm-9">@Model.IdProyectoNavigation?.Nombre</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="IdIncidente" />
+        <div class="mt-4 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </div>
+    </form>
+</div>

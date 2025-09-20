@@ -1,0 +1,46 @@
+﻿@model PracticoII_Web.Data.Models.Comentario
+
+@{
+    ViewData["Title"] = "Editar Comentario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-dark">Editar Comentario</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="IdComentario" />
+
+                <div class="mb-3">
+                    <label asp-for="IdUsuario" class="form-label fw-bold"></label>
+                    <select asp-for="IdUsuario" class="form-control" asp-items="ViewBag.IdUsuario"></select>
+                    <span asp-validation-for="IdUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Texto" class="form-label fw-bold"></label>
+                    <input asp-for="Texto" class="form-control" />
+                    <span asp-validation-for="Texto" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Fecha" class="form-label fw-bold"></label>
+                    <input asp-for="Fecha" class="form-control" />
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success"><i class="bi bi-save-fill"></i> Guardar</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

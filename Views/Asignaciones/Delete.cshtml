@@ -1,0 +1,28 @@
+﻿@model PracticoII_Web.Data.Models.Asignacione
+
+@{
+    ViewData["Title"] = "Borrar Asignación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-danger">Confirmar eliminación</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Fecha de Asignación</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaAsignacion)</dd>
+
+                <dt class="col-sm-3 fw-bold">Usuario Asignado</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.IdUsuarioAsignadoNavigation.IdUsuario)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="IdAsignacion" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Borrar</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

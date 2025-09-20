@@ -1,0 +1,38 @@
+﻿@model PracticoII_Web.Data.Models.Proyecto
+@{
+    ViewData["Title"] = "Detalles del Proyecto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-dark fw-bold mb-4">Detalles del Proyecto</h2>
+
+    <div class="card shadow">
+        <div class="card-body bg-light">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Nombre</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3 fw-bold">Descripción</dt>
+                <dd class="col-sm-9">@Model.Descripcion</dd>
+
+                <dt class="col-sm-3 fw-bold">Fecha de Inicio</dt>
+                <dd class="col-sm-9">@Model.FechaInicio</dd>
+
+                <dt class="col-sm-3 fw-bold">Fecha de Fin</dt>
+                <dd class="col-sm-9">@Model.FechaFin</dd>
+
+                <dt class="col-sm-3 fw-bold">Asignación</dt>
+                <dd class="col-sm-9">@Model.IdAsignacion</dd>
+
+                <dt class="col-sm-3 fw-bold">Asignación Navegación</dt>
+                <dd class="col-sm-9">@Model.IdProyectoNavigation?.IdAsignacion</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        <a asp-action="Edit" asp-route-id="@Model?.IdProyecto" class="btn btn-primary">Editar</a>
+    </div>
+</div>

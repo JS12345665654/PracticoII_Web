@@ -1,0 +1,24 @@
+﻿@model PracticoII_Web.Data.Models.Asignacione
+
+@{
+    ViewData["Title"] = "Detalles de Asignación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-dark">Detalles de la Asignación</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Fecha de Asignación</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaAsignacion)</dd>
+            </dl>
+
+            <a asp-action="Edit" asp-route-id="@Model?.IdAsignacion" class="btn btn-warning">
+                <i class="bi bi-pencil-fill"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Volver</a>
+        </div>
+    </div>
+</div>

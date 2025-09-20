@@ -1,0 +1,31 @@
+﻿@model PracticoII_Web.Data.Models.Usuario
+
+@{
+    ViewData["Title"] = "Borrar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-danger">Confirmar eliminación</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Nombre</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Nombre)</dd>
+
+                <dt class="col-sm-3 fw-bold">Email</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+                <dt class="col-sm-3 fw-bold">Rol</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Rol)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="IdUsuario" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Borrar</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>

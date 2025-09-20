@@ -1,0 +1,31 @@
+﻿@model PracticoII_Web.Data.Models.Incidente
+
+@{
+    ViewData["Title"] = "Detalle de Incidente";
+}
+
+<h1 class="mt-4">Detalle de Incidente</h1>
+
+<div class="card bg-dark text-white p-4 mt-3 shadow rounded">
+    <dl class="row">
+        <dt class="col-sm-3">Título</dt>
+        <dd class="col-sm-9">@Model.Titulo</dd>
+
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+
+        <dt class="col-sm-3">Usuario que Reporta</dt>
+        <dd class="col-sm-9">@Model.IdUsuarioReportaNavigation?.Nombre</dd>
+
+        <dt class="col-sm-3">Proyecto Relacionado</dt>
+        <dd class="col-sm-9">@Model.IdProyectoNavigation?.Nombre</dd>
+    </dl>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+        @if (User.IsInRole("Administrador"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.IdIncidente" class="btn btn-warning">Editar</a>
+        }
+    </div>
+</div>
